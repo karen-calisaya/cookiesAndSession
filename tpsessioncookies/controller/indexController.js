@@ -1,10 +1,19 @@
+const {validationResult} = require('express-validator')
 module.exports = {
     index: (req, res) => {
-        res.redirect('index', {
-            title: 'Express'
-        });
+        res.render('index', {
+            title: 'express'
+        })
     },
     processIndex: (req, res) => {
-        res.redirect('index')
+        let errors = validationResult(req);
+        if(errors.isEmpty()){
+            res.render('/');
+        }else{
+            res.render('/',{
+                title: 'express',
+                errors: errors.mapped()
+            })
+        }
     }
 }
