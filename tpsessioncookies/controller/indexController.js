@@ -9,8 +9,15 @@ module.exports = {
     },
     processIndex: (req, res) => {
         let errors = validationResult(req);
+        if(errors.errors.length > 0){
+            res.render('index', {
+                errors: errors.mapped(),
+                title: "express",
+                old: req.body
+            })
+        }
        
-        if(errors.isEmpty()){
+        /* if(errors.isEmpty()){
             let lastId = 0;
             users.forEach(user => {
                 if(user.id > lastId ){
@@ -26,10 +33,11 @@ module.exports = {
             }
             users.push(newUser)
             writeUsers(users)
-           res.send('te has registrado con exito');
+           res.send('te has registrado con exito'); 
+
 
         }else{
             res.send('hola')
-        }
+        } */
     }
 }
