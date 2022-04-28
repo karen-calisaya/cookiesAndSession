@@ -8,12 +8,25 @@ module.exports = {
         })
     },
     processIndex: (req, res) => {
+        let newUser = {
+            name,
+            email,
+            color,
+            edad
+        } = req.body
+
         let errors = validationResult(req);
         if(errors.errors.length > 0){
             res.render('index', {
                 errors: errors.mapped(),
                 title: "express",
                 old: req.body
+            });
+            
+        } else {
+            res.render('hola', {
+                title: 'hola',
+                newUser
             })
         }
        

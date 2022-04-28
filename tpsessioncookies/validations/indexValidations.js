@@ -8,7 +8,7 @@ const {check, validationResult} = require('express-validator');
         .notEmpty().withMessage('debe escribir un email').bail()
         .isEmail().withMessage('Debes escribir un email correcto'),
     check('edad')
-        .isNumeric().withMessage('Debes usar números')
+        .isAlphanumeric().withMessage('Debes usar números')
  ] 
 
 module.exports = indexValidations;
