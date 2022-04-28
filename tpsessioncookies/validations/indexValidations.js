@@ -1,5 +1,5 @@
-const {check} = require('express-validator');
- let indexValidaciones = [
+const {check, validationResult} = require('express-validator');
+ let indexValidations = [
     check('name')
         .notEmpty().withMessage('Campo requerido'),
     check('color')
@@ -11,4 +11,4 @@ const {check} = require('express-validator');
         .isNumeric().withMessage('Debes usar números')
  ] 
 
-module.exports = indexValidaciones;
+module.exports = indexValidations;

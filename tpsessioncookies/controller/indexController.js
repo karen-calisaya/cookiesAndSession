@@ -1,4 +1,6 @@
 const {validationResult} = require('express-validator')
+const {users, writeUsers} = require('../data/data');
+
 module.exports = {
     index: (req, res) => {
         res.render('index', {
@@ -7,13 +9,27 @@ module.exports = {
     },
     processIndex: (req, res) => {
         let errors = validationResult(req);
+       
         if(errors.isEmpty()){
-            res.render('/');
+            let lastId = 0;
+            users.forEach(user => {
+                if(user.id > lastId ){
+                    lastId = user.id
+                }
+            });
+            let newUser = {
+                id: lastId + 1,
+                name: req.body.name,
+                email: req.body.email,
+                color: req.body.color,
+                edad: req.body.edad
+            }
+            users.push(newUser)
+            writeUsers(users)
+           res.send('te has registrado con exito');
+
         }else{
-            res.render('/',{
-                title: 'express',
-                errors: errors.mapped()
-            })
+            res.send('hola')
         }
     }
 }
