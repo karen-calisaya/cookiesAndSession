@@ -13,6 +13,9 @@
     <main class="forms__mainContainer">
       <form action="/" method="post">
           <div class="form--group mb-3 col-md-6">
+            <% if (locals.session && session.usuario) { %>
+              Es bueno verte por aca de nuevo <%= session.usuario.name %> 
+            <% } %>
               <label for="name">Ingrese su nombre</label>
               <input type="text" name="name" id="name" value="<%= locals.old && old.name %>" >
               <% if (locals.errors && errors.name) { %>
@@ -22,9 +25,9 @@
           <div class="form--group mb-3 col-md-6">
           <select name="color">
             <option selected value="">Elija el color que mas le guste</option>
-            <option class ="amarillo" value="amarillo" <%= (locals.old && old.color) && old.color === "amarillo" ? "selected" : "" %>>Amarillo</option>
-            <option value="violeta" <%= (locals.old && old.color) && old.color === "violeta" ? "selected" : "" %> >Violeta</option>
-            <option value="azul" <%= (locals.old && old.color) && old.color === "azul" ? "selected" : ""%> >Azul</option>
+            <option value="danger" <%= locals.old && old.color == "danger" ? "selected" : "" %>>Rojo</option>
+            <option value="success" <%= locals.old && old.color == "success" ? "selected" : "" %> >Verde</option>
+            <option value="primary" <%= locals.old && old.color == "primary" ? "selected" : ""%> >Azul</option>
           </select>
           <% if (locals.errors && errors.color) { %>
             <small class="text-danger"><%= errors.color.msg %> </small>

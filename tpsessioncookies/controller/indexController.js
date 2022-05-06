@@ -8,49 +8,38 @@ module.exports = {
         })
     },
     processIndex: (req, res) => {
-        let newUser = {
-            name,
-            email,
-            color,
-            edad
-        } = req.body
+    
 
         let errors = validationResult(req);
-        if(errors.errors.length > 0){
-            res.render('index', {
-                errors: errors.mapped(),
-                title: "express",
-                old: req.body
-            });
-            
-        } else {
+    
+        if(errors.isEmpty()){
+            req.session.usuario = { ...req.body};
+            if(req.body.remember){
+                const TIME_IN_MILISECONDS = 60000;
+                res.cookie('trabajo', req.session.usuario.remember, {
+                    expires: new Data (Data.now() + TIME_IN_MILISECONDS),
+                    httpOnly: true,
+                    secure: true,
+                });
+            }
             res.render('hola', {
                 title: 'hola',
-                newUser
+                session: req.session
             })
-        }
-       
-        /* if(errors.isEmpty()){
-            let lastId = 0;
-            users.forEach(user => {
-                if(user.id > lastId ){
-                    lastId = user.id
-                }
+        } else {
+            res.render('index', {
+                errors: errors.mapped(),
+                old: req.body,
+                title: 'hola'
             });
-            let newUser = {
-                id: lastId + 1,
-                name: req.body.name,
-                email: req.body.email,
-                color: req.body.color,
-                edad: req.body.edad
-            }
-            users.push(newUser)
-            writeUsers(users)
-           res.send('te has registrado con exito'); 
-
-
-        }else{
-            res.send('hola')
-        } */
+           
+    }
+},
+    sessionDestroy: (req, res) => {
+        req.session.destroy();
+        if(req.cookies.trabajo){
+            res.cookie('trabajo', "", {maxAge: -1})
+        }
+        res.redirect('/')
     }
 }
