@@ -1,32 +1,37 @@
 var createError = require('http-errors');
 var express = require('express');
+var app = express();
 var path = require('path');
-var expressSession = require('express-session');
+var port = 3000;
+
+var methodOverride = require('method-override')
+var session = require('express-session');
 var cookieParser = require('cookie-parser');
-var cookieCheck = require('./middlewares/cookieCheck')
+var cookieSession = require('./middlewares/cookieCheck')
 
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 /* var usersRouter = require('./routes/users'); */
 
-var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(expressSession({
+app.use(express.json());
+app.use(methodOverride('_method'));
+app.use(session({
   secret: "secreto",
   resave: false,
   saveUninitialized: true,
   cookie: {}
 }))
-app.use(cookieCheck);
+app.use(cookieParser());
+app.use(cookieSession);
+
+// view engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);

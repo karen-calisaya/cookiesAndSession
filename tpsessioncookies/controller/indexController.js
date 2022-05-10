@@ -4,24 +4,27 @@ const {users, writeUsers} = require('../data/data');
 module.exports = {
     index: (req, res) => {
         res.render('index', {
-            title: 'express'
+            title: 'express',
+            session:req.session
         })
     },
     processIndex: (req, res) => {
-    
-
         let errors = validationResult(req);
     
         if(errors.isEmpty()){
             req.session.usuario = { ...req.body};
+
+            /* cookie */
             if(req.body.remember){
                 const TIME_IN_MILISECONDS = 60000;
-                res.cookie('trabajo', req.session.usuario.remember, {
-                    expires: new Data (Data.now() + TIME_IN_MILISECONDS),
+                res.cookie('trabajo', req.session.usuario, {
+                    expires: new Date(Date.now() + TIME_IN_MILISECONDS),
                     httpOnly: true,
                     secure: true,
                 });
             }
+            res.locals.usuario = req.session.usuario
+
             res.render('hola', {
                 title: 'hola',
                 session: req.session
@@ -30,7 +33,8 @@ module.exports = {
             res.render('index', {
                 errors: errors.mapped(),
                 old: req.body,
-                title: 'hola'
+                title: 'hola',
+                session: req.session
             });
            
     }
